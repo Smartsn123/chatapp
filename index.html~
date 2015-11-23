@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input {  padding: 10px; width: 50%; }
+     }
+      
+    </style>
+  </head>
+  <body>
+    <ul id="messages" ></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    
+    
+    <!-- load socket.io-client and  expose io  -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js">
+    </script>
+    <script>
+    
+       //getting the user's IP
+       var ipd="def  "
+       $.getJSON("http://jsonip.appspot.com?callback=?",
+       function(data){
+                    ipd= data.ip;
+         });
+       var socket =io();
+       //submit in html will trigger this function
+       //we will emit an action by name  'chat message' 
+       // to the  server using socket.emit along with msg
+       
+       $('form').submit( function()
+                                   {
+                                    socket.emit('chat message',$('#m').val());
+                                    $('#m').val('');
+                                    return false;
+                                   }
+                         );
+       
+        socket.on('chat message', 
+                                function(msg){
+                   $('#messages').append($('<li>').text(msg)); 
+                                               }
+                 );
+     </script>
+  </body>
+</html>
